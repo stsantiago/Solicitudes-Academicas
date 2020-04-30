@@ -1,0 +1,133 @@
+<mvc:View xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified"
+	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" height="100%" controllerName="ean.edu.solicitud.controller.init">
+	<NavContainer id="wizardNavContainer">
+		<pages>
+			<Page id="wizardContentPage" showHeader="false">
+				<content>
+					<Wizard id="WizardSolicitudes" complete="completedHandler" enableBranching="true">
+						<WizardStep id="DatosGeneralStep" nextStep="ProgramasStep" title="Datos Generales" icon="sap-icon://initiative">
+							<form:SimpleForm>
+								<Label text="Fecha de Solicitud" required="true"/>
+								<Input id='fechaSolicitud' editable="false"/>
+								<Label text="Nombres" required="true"/>
+								<Input id="nomEstudiante" editable="false"/>
+								<Label text="Apellidos" required="true"/>
+								<Input id="apeEstudiante" editable="false"/>
+								<Label text="Correo Electronico" required="true"/>
+								<Input id="mailEstudiante" editable="false"/>
+								<Label text="Documento" required="true"/>
+								<Input id="docEstudiante" editable="false"/>
+								<Label text="Semestre" required="true"/>
+								<Input id="semestre" editable="false"/>
+							</form:SimpleForm>
+							<Text text="La información visualizada es correcta?"/>
+							<RadioButtonGroup columns="5" class="sapUiMediumMarginBottom" select="onSelect">
+								<buttons>
+									<RadioButton id="rb-si" text="Si"/>
+									<RadioButton id="rb-no" text="No"/>
+								</buttons>
+							</RadioButtonGroup>
+						</WizardStep>
+						<WizardStep id="ProgramasStep" activate="getProgData" nextStep="TipoSolicitudStep" title="Programa Académico" icon="sap-icon://initiative">
+							<form:SimpleForm editable="true">
+								<Label text="Programa Académico" required="true"/>
+								<Select id="oSProgramas" items="{/ProgramasSet}" change="onSelectProg">
+									<items>
+										<core:ListItem key="{ProgramaId}" text="{ProgramaTxt}"/>
+									</items>
+								</Select>
+								<Label text="Año Académico" required="true"/>
+								<Select id="oSAnio" items="{/ProgramasAnio}" change="onSelectAnio">
+									<items>
+										<core:ListItem  key="{ProgramaAnio}" text="{ProgramaAnio}"/>
+									</items>
+								</Select>
+								<Label text="Periodo" required="true"/>
+								<Select id="oSPeriodo" items="{/ProgramasPer}" change="onSelectPer">
+									<items>
+										<core:ListItem key="{ProgramaPeriodo}" text="{ProgramaPeriodo}"/>
+									</items>
+								</Select>
+								<!--<Label text="Año Académico" required="true"/>-->
+								<!--<Input id='inAnioPrograma' editable="false"/>-->
+								<!--<Label text="Periodo Académico" required="true"/>-->
+								<!--<Input id='inPeriodoProg' editable="false"/>-->
+							</form:SimpleForm>
+							<!--<MessageStrip type="Information" showIcon="true" text="Nota"/>-->
+							<!--<TextArea editable="false"-->
+							<!--	value="Recuerde que la universidad tiene una política de propiedad del cliente para la protección de nuestros estudiantes, por lo tanto al momento de reclamar sus solicitudes deberá presentar carné estudiantil, o autorización correspondiente según el numeral 3.2.5 de la política en mención."-->
+							<!--	growing="true" width="100%"/>-->
+						</WizardStep>
+						<WizardStep id="TipoSolicitudStep" title="Tipo de Solicitud" subsequentSteps="SolCertificaStep, SolGeneralStep" complete="goToPaymentStep"
+							icon="sap-icon://initiative">
+							<Text class="sapUiSmallMarginBottom" text="Por favor elija el tipo de Solicitud."/>
+							<HBox alignItems="Center" justifyContent="Center" width="100%">
+								<SegmentedButton select="setTipoSolicitud" id="tipoSolicitudSelection">
+									<items>
+										<SegmentedButtonItem key="Certificados" icon="sap-icon://document-text" text="Certificados" width="auto"/>
+										<SegmentedButtonItem key="Generales" icon="sap-icon://sap-box" text="Generales" width="auto"/>
+									</items>
+								</SegmentedButton>
+							</HBox>
+						</WizardStep>
+						<WizardStep id="SolCertificaStep" activate="getCertificado" title="Solicitud de Certificaciones" nextStep="ResumenStep" icon="sap-icon://initiative">
+							<form:SimpleForm>
+								<Label text="Seleccione el certificado que desea" required="true"/>
+								<Select id="oSCertifica" items="{/CertificadoSet}" change="onSelectCert">
+									<items>
+										<core:ListItem id="itCertifica" key="{CertificadoId}" text="{CertificadoTxt}"/>
+									</items>
+								</Select>
+								<Label text="Cantidad" required="true"/>
+								<Input id="inCant" value="1" editable="true" type="Number" liveChange="onCant"/>
+							</form:SimpleForm>
+							<Text
+								text="Detalles adicionales: mencione aquí los datos relevantes adicionales que forman parte de la certificación como entidad para tramites judicatura, licencia provisional, trabajo o empresa según se requiera."/>
+							<TextArea id="txtDetAdic" growing="true" width="100%"/>
+						</WizardStep>
+						<WizardStep id="SolGeneralStep" activate="getSolicitud" title="Solicitudes Generales" subsequentSteps="MateriasStep, ResumenStep"
+							complete="goToOptionStep" icon="sap-icon://initiative">
+							<form:SimpleForm editable="false">
+								<Label text="Seleccione la solicitud que desea" required="true"/>
+								<Select id="oSSolicitud" items="{/SolicitudesSet}" change="onSelectSol">
+									<items>
+										<core:ListItem id="itSolicitud" key="{SolicitudId}" text="{SolicitudTxt}"/>
+									</items>
+								</Select>
+								<Label text="Observaciones"/>
+								<TextArea id="txtObserv" growing="true" width="100%"
+									placeholder="Si considera que se debe tener en cuenta algún elemento para la creación de su solicitud por favor descríbala"/>
+								<Label text="Adicione sus archivos de ser necesario"/>
+								<u:FileUploader id="fileUploader" name="Files" fileType="pdf" width="100%"
+									uploadUrl="/sap/opu/odata/sap/ZSLCM_SOLICITUDES_ACADEMICAS_SRV/FilesSet" tooltip="Upload your file to the local server" sendXHR="true"
+									Multipart="true" uploadComplete="handleUploadComplete" placeholder="Formato PDF"/>
+								<Label visible="false"/>
+								<Button text="Cargar" press="handleUploadPress" width="25%"/>
+							</form:SimpleForm>
+							<Panel>
+								<content>
+									<Table id="idFilesTable" visible="false"/>
+								</content>
+							</Panel>
+						</WizardStep>
+						<WizardStep id="MateriasStep" title="Selección de Materias" nextStep="ResumenStep" icon="sap-icon://initiative">
+							<List id="ListaMaterias" mode="MultiSelect" includeItemInSelection="true">
+								<StandardListItem title="{Materia}" type="Active" iconDensityAware="false"/>
+							</List>
+						</WizardStep>
+						<WizardStep id="ResumenStep" activate="loadHistorico" title="Historial de Solicitudes" icon="sap-icon://initiative">
+							<Table id="idResumenTable"></Table>
+						</WizardStep>
+					</Wizard>
+				</content>
+				<footer>
+					<Toolbar>
+						<ToolbarSpacer/>
+						<Button id="BtnConf" text="Confirmar" press="handleWizardSubmit" type="Accept" visible="false"/>
+						<Button text="Cancelar" press="handleWizardCancel" type="Reject"/>
+					</Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</NavContainer>
+</mvc:View>

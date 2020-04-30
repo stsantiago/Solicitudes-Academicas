@@ -1,0 +1,40 @@
+<core:FragmentDefinition xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns="sap.m" height="100%">
+		<Page id="wizardBranchingReviewPage" showHeader="false">
+			<content id="content1">
+				<MessageStrip type="Warning" showIcon="true" text="Antes de confirmar la liquidación verifique que la información suministrada esta correcta. Una vez realizada la liquidación no es posible hacer modificaciones por esta vía."/>
+				<!--<Panel id="PCertifica" visible="false">-->
+				<!--	<form:SimpleForm id="formCertifica" title="Resumen" minWidth="1024" editable="false" layout="ResponsiveGridLayout" >-->
+				<!--	<List mode="None" enableBusyIndicator="true">-->
+				<!--		<StandardListItem title="{Certificado}" type="Active" info="{Precio} {Moneda}" iconDensityAware="false" iconInset="false"/>-->
+				<!--	</List>-->
+				<!--	<ObjectHeader title="Total" number="{/CertificadosTotalPrice}" numberUnit="COP">-->
+				<!--		<attributes>-->
+				<!--			<ObjectAttribute press="_navBackToList" active="true" text="Editar"/>-->
+				<!--		</attributes>-->
+				<!--	</ObjectHeader>-->
+				<!--	</form:SimpleForm>-->
+				<!--</Panel>-->
+				<Panel id="PSolicitud" visible="false">
+					<form:SimpleForm id="formSolicitud" title="Resumen" minWidth="1024" editable="false" layout="ResponsiveGridLayout">
+					<List id="liSolicitud" mode="None" enableBusyIndicator="true">
+						<!--<StandardListItem id="itSolicitud" title="{Solicitud}" type="Active" info="{Precio} {Moneda}" iconDensityAware="false" iconInset="false"/>-->
+						<StandardListItem id="sliSolicitud" type="Active" iconDensityAware="false" iconInset="false"/>
+					</List>
+					<ObjectHeader id="ohTotal" title="Total" numberUnit="COP">
+						<attributes>
+							<ObjectAttribute press="_navBackToList" active="true" text="Editar"/>
+						</attributes>
+					</ObjectHeader>
+					</form:SimpleForm>
+				</Panel>
+			</content>
+			<footer>
+				<Bar>
+					<contentRight>
+						<Button text="Confirmar" press="handleWizardSubmit" type="Accept"/>
+						<Button text="Cancelar" press="handleWizardCancel" type="Reject"/>
+					</contentRight>
+				</Bar>
+			</footer>
+		</Page>
+</core:FragmentDefinition>
